@@ -1,0 +1,18 @@
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: portal_db
+      POSTGRES_USER: portal_mgmt
+      POSTGRES_PASSWORD: UQrMJC5q
+
+  app:
+    build: .
+    ports:
+      - "8123:8000"
+    environment:
+      DATABASE_URL: postgresql://portal_mgmt:UQrMJC5q@db:5432/portal_db
+    depends_on:
+      - db
+    volumes:
+      - .:/app
