@@ -8,8 +8,10 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN mkdir portal
+RUN mkdir portal alembic
+COPY alembic alembic/.
 COPY portal portal/.
+COPY alembic.ini .
 
 USER code
 EXPOSE 8000

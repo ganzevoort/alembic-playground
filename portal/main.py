@@ -14,9 +14,6 @@ from .schemas import (
 )
 
 
-# Create database tables
-Base.metadata.create_all(bind=engine)
-
 app = FastAPI(title="Portal Management Service", version="1.0.0")
 
 

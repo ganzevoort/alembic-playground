@@ -2,17 +2,37 @@ services:
   db:
     image: postgres
     environment:
-      POSTGRES_DB: portal_db
-      POSTGRES_USER: portal_mgmt
-      POSTGRES_PASSWORD: UQrMJC5q
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    healthcheck:
+      test: pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}
+      interval: 2s
+
+  migration:
+    build: .
+    environment:
+      - DATABASE_URL
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+    volumes:
+      - .:/app
+    command: alembic upgrade head
 
   app:
     build: .
     ports:
       - "8123:8000"
     environment:
-      DATABASE_URL: postgresql://portal_mgmt:UQrMJC5q@db:5432/portal_db
+      - DATABASE_URL
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+        restart: true
+      migration:
+        condition: service_completed_successfully
+        restart: true
     volumes:
       - .:/app
