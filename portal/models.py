@@ -37,6 +37,10 @@ class User(Base):
         String,
         nullable=False,
     )
+    email = Column(
+        String,
+        nullable=True,
+    )
     portal_id = Column(
         UUID(as_uuid=True),
         ForeignKey("portals.id"),
