@@ -1,4 +1,3 @@
-BEGIN;
 
 -- Running upgrade 3631b09424ef -> 4dc11366aefc
 
@@ -17,6 +16,4 @@ CREATE TABLE users (
 );
 
 UPDATE alembic_version SET version_num='4dc11366aefc' WHERE alembic_version.version_num = '3631b09424ef';
-
-COMMIT;
 

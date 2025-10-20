@@ -16,6 +16,7 @@ class Portal(Base):
         primary_key=True,
         default=uuid.uuid4,
     )
+    logo = Column(String)
     name = Column(
         String,
         nullable=False,

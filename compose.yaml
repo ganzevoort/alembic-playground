@@ -13,13 +13,25 @@ services:
     build: .
     environment:
       - DATABASE_URL
+    volumes:
+      - .:/app
     depends_on:
       db:
         condition: service_healthy
         restart: true
+    command: python3 alembic/makesqlmigrations.py
+
+  flyway:
+    image: flyway/flyway
     volumes:
-      - .:/app
-    command: alembic upgrade head
+      - ./flyway:/flyway/db
+      - ./sql:/flyway/sql
+      - ./flyway:/flyway/conf
+    depends_on:
+      migration:
+        condition: service_completed_successfully
+        restart: true
+    command: migrate
 
   app:
     build: .
@@ -27,12 +39,12 @@ services:
       - "8123:8000"
     environment:
       - DATABASE_URL
+    volumes:
+      - .:/app
     depends_on:
       db:
         condition: service_healthy
         restart: true
-      migration:
+      flyway:
         condition: service_completed_successfully
         restart: true
-    volumes:
-      - .:/app
